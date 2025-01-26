@@ -6,9 +6,9 @@
 
     $inData = getRequestInfo();
 
-    // check if all necessary fields were scent
-    if (empty($inData["login"]) || empty($inData["login"]) || empty($inData["login"]) || empty($inData["login"])) {
-        returnWithError("Missing or empty required field(s).");
+    // check if all necessary fields were set
+    if (!isset($inData["login"]) || !isset($inData["login"]) || !isset($inData["login"]) || !isset($inData["login"])) {
+        returnWithError("Missing required field(s).");
         exit();
     }
 
@@ -17,7 +17,7 @@
     if( $conn->connect_error )
     {
         returnWithError("Database connection failed: " . $conn->connect_error ); // failed to connect
-        exit()
+        exit();
     }
 
     // insert user into Users
@@ -27,6 +27,12 @@
     $password = $inData["password"];
     $firstName = $inData["firstName"];
     $lastName = $inData["lastName"];
+
+    // check if any field is empty
+    if (strlen($inData["login"]) == 0 || strlen($inData["login"]) == 0 || strlen($inData["login"]) == 0 || strlen($inData["login"] == 0)) {
+        returnWithError("Empty required field(s).");
+        exit();
+    }
     $stmt->bind_param("ssss", $firstName, $lastName, $login, $password);
 
     $stmt->execute();
@@ -65,7 +71,7 @@
     function sendResultInfoAsJson( $obj )
     {
         header('Content-type: application/json');
-        echo $obj;
+        echo json_encode($obj);
     }
 
     // function to return error message as JSON
