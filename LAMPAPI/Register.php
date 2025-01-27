@@ -6,9 +6,9 @@
 
     $inData = getRequestInfo();
 
-    // check if all necessary fields were set
-    if (!isset($inData["login"]) || !isset($inData["login"]) || !isset($inData["login"]) || !isset($inData["login"])) {
-        returnWithError("Missing required field(s).");
+    // check if all necessary fields are set and non empty
+    if (empty($inData["login"]) || empty($inData["password"]) || empty($inData["firstName"]) || empty($inData["lastName"])) {
+        returnWithError("Missing or empty required field(s).");
         exit();
     }
 
@@ -28,11 +28,6 @@
     $firstName = $inData["firstName"];
     $lastName = $inData["lastName"];
 
-    // check if any field is empty
-    if (strlen($inData["login"]) == 0 || strlen($inData["login"]) == 0 || strlen($inData["login"]) == 0 || strlen($inData["login"] == 0)) {
-        returnWithError("Empty required field(s).");
-        exit();
-    }
     $stmt->bind_param("ssss", $firstName, $lastName, $login, $password);
 
     $stmt->execute();
@@ -66,14 +61,14 @@
     
         return $data;
     }
-
+    
     // function to send JSON response
     function sendResultInfoAsJson( $obj )
     {
         header('Content-type: application/json');
         echo json_encode($obj);
     }
-
+ 
     // function to return error message as JSON
     function returnWithError( $err )
     {
