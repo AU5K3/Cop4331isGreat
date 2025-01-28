@@ -1,0 +1,122 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <a href="login.html">Log Out</a>
+    </head>
+    <body>
+        <button id="addContact">Add Contact</button>
+        <div id="formSpace" style="margin-top: 20px;"></div>
+        <table id="mainTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Phone Number</th>
+                    <th>Address</th>
+                    <th>Email Address</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- data to be implemented -->
+            </tbody>
+        </table>
+        <script>
+            document.getElementById('addContact').addEventListener('click', () => {
+                const formContainer = document.getElementById('formSpace');
+                formSpace.innerHTML = `
+                    <form id="newContact">
+                        <label for="name">Name: </label><br>
+                        <input type="text" id="name" name="name" required><br><br>
+                        <label for="phoneNum">Phone Number: </label><br>
+                        <input type="text" id="phoneNum" name="phoneNum" required><br><br>
+                        <label for="address">Address: </label><br>
+                        <input type="text" id="address" name="address" required><br><br>
+                        <label for="email">Email Address: </label><br>
+                        <input type="text" id="email" name="email" required><br><br>
+                        <button type="submit">Create Contact</button>
+                    </form>`;
+
+                document.getElementById('newContact').addEventListener('submit', (e) => {
+                    e.preventDefault();
+
+                    const formData = new FormData(e.target);
+
+                    fetch('../LAMPAPI/addContact.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const newRow = document.createElement('tr');
+                        /*
+                        newItems.innerHTML = `
+                            <td>${data.contact.name}</td>
+                            <td>${data.contact.phone}</td>
+                            <td>${data.contact.address}</td>
+                            <td>${data.contact.email}</td>
+                        `;
+                        */
+                        Object.values(data).forEach(cell => {
+                            const td = document.createElement('td');
+                            td.textContent = cell;
+                            newRow.appendChild(td);
+                            console.log(td);
+                        });
+                        const actionCell = document.createElement('td');
+                        const deleteButton = document.createElement('button');
+                        deleteButton.innerHTML = '&#10006;';
+                        deleteButton.addEventListener('click', () => {
+                            newRow.remove();
+                        });
+                        actionCell.appendChild(deleteButton);
+                        newRow.appendChild(actionCell);
+
+                        document.getElementById('mainTable').appendChild(newRow);
+
+                        formSpace.innerHTML = '<p>Create Successful!!</p>';
+                    })
+                    .catch(error => {
+                        console.error('Error with add: ', error);
+                        formContainer.innerHTML = '<p>Error creating contact please try again</p>';
+                    });
+                });
+            });
+
+            
+            async function makeTable() {
+              try {
+                const response = await fetch('../LAMPAPI/getData.php');
+                const data = await response.json();
+                const tableContent = document.getElementById('mainTable').querySelector('tbody');
+
+                  data.forEach(row => {
+                        const tr = document.createElement('tr');
+
+                        Object.values(row).forEach(cell => {
+                            const td = document.createElement('td');
+                            td.textContent = cell;
+                            tr.appendChild(td);
+                        });
+                        const actionCell = document.createElement('td');
+                        const deleteButton = document.createElement('button');
+                        deleteButton.innerHTML = '&#10006;';
+                        deleteButton.addEventListener('click', () => {
+                            tr.remove();
+                        });
+                        actionCell.appendChild(deleteButton);
+                        tr.appendChild(actionCell);
+
+                        mainTable.appendChild(tr);
+                    });
+              } catch (error) {
+                console.error('Error fetching contact data: ', error);
+              }
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+              makeTable();
+            })
+
+        </script>
+    </body>
+</html>
