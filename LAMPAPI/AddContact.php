@@ -1,150 +1,84 @@
 <?php
-
-session_start();  // Start the session to access the UserID
-
-// for debugging purposes
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Function to get input data from the request body
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+	echo json_encode([
+		"error" => "Invalid request method."
+	]);
+	exit();
+}
+
+$inData = getRequestInfo();
+
+if ($inData === null) {
+	error_log("Raw input received: " . file_get_contents('php://input'));
+	returnWithError("Invalid JSON format or no data received");
+	exit();
+}
+
+error_log("Decoded JSON: " . json_encode($inData));
+
+// init variables
+$firstName = $inData["firstName"];
+$lastName = $inData["lastName"];
+$phone = $inData["phone"];
+$email = $inData["email"];
+$userId = $inData["UserID"];
+
+
+error_log("Extracted values: firstName=$firstName, lastName=$lastName, phone=$phone, email=$email, UserID=$userId");
+
+//connect to database
+$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
+if ($conn->connect_error) {
+	error_log("Connection failed: " . $conn->connect_error);
+	returnWithError("Connection failed: " . $conn->connect_error);
+	exit();
+}
+
+$stmt = $conn->prepare("INSERT INTO Contacts (FirstName, LastName, Phone, Email, UserID) VALUES (?, ?, ?, ?, ?)");
+$stmt->bind_param("ssssi", $firstName, $lastName, $phone, $email, $userId);
+
+if ($stmt->execute()) {
+	returnWithSuccess("Contact added successfully");
+} else {
+	error_log("Failed to execute query: " . $stmt->error);
+	returnWithError("Failed to add contact");
+}
+
+$stmt->close();
+$conn->close();
+
+//All functions to return errors and return statements
 function getRequestInfo()
 {
-    $json = file_get_contents('php://input');
-    $data = json_decode($json, true);
-
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        returnWithError("Invalid JSON payload: " . json_last_error_msg());
-        exit();
-    }
-
-    return $data;
+	$rawData = file_get_contents('php://input');
+	error_log("Raw input received: " . $rawData);
+	return json_decode($rawData, true);
 }
 
-// Function to send JSON response
+
 function sendResultInfoAsJson($obj)
 {
-    header('Content-type: application/json');
-    echo json_encode($obj);
+	header('Content-type: application/json');
+	echo $obj;
 }
 
-// Function to return error message as JSON
+
 function returnWithError($err)
 {
-    $retValue = array("error" => $err);
-    sendResultInfoAsJson($retValue);
+	$retValue = '{"error":"' . $err . '"}';
+	sendResultInfoAsJson($retValue);
 }
-	// $inData = getRequestInfo();
-	
-	// $color = $inData["contacts"];
-	// $userId = $inData["userId"];
 
-	// $conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
-	// if ($conn->connect_error) 
-	// {
-	// 	returnWithError( $conn->connect_error );
-	// } 
-	// else
-	// {
-	// 	$stmt = $conn->prepare("INSERT into Contacts (UserId,Name) VALUES(?,?)");
-	// 	$stmt->bind_param("ss", $userId, $color);
-	// 	$stmt->execute();
-	// 	$stmt->close();
-	// 	$conn->close();
-	// 	returnWithError("");
-	// }
 
-	// function getRequestInfo()
-	// {
-	// 	return json_decode(file_get_contents('php://input'), true);
-	// }
-
-	// function sendResultInfoAsJson( $obj )
-	// {
-	// 	header('Content-type: application/json');
-	// 	echo $obj;
-	// }
-	
-	// function returnWithError( $err )
-	// {
-	// 	$retValue = '{"error":"' . $err . '"}';
-	// 	sendResultInfoAsJson( $retValue );
-	// }
-
-	if (!isset($_SESSION['UserID'])) {
-		returnWithError("User is not logged in.");
-		exit();
-	}
-	
-	$userId = $_SESSION['UserID'];  // uses ssession start
-	
-	$inData = getRequestInfo();
-	
-	
-	if (!isset($inData["firstName"]) || !isset($inData["lastName"]) || !isset($inData["email"])) {
-		returnWithError("Missing required fields.");
-		exit();
-	}
-	
-	// set variables
-	$firstName = $inData["firstName"];
-	$lastName = $inData["lastName"];
-	$email = $inData["email"];
-	
-	// Database connection
-	$conn = new mysqli("localhost", "root", "sfstLU6!pKcn", "SPROJECTDB");
-	if ($conn->connect_error) 
-	{
-		returnWithError("Database connection failed: " . $conn->connect_error);
-		exit();
-	}
-	
-	// Insert into CONTACTS table
-	$stmt = $conn->prepare("INSERT INTO CONTACTS (FirstName, LastName, Email) VALUES (?, ?, ?)");
-	if ($stmt === false) {
-		returnWithError("Failed to prepare INSERT statement for CONTACTS: " . $conn->error);
-		$conn->close();
-		exit();
-	}
-	$stmt->bind_param("sss", $firstName, $lastName, $email);
-	$stmt->execute();
-	
-	// any errors
-	if ($stmt->error) {
-		returnWithError("Failed to execute INSERT statement for CONTACTS: " . $stmt->error);
-		$stmt->close();
-		$conn->close();
-		exit();
-	}
-	
-	// Get the ID of the newly inserted contact
-	$contactID = $stmt->insert_id;  // This retrieves the auto-incremented ID from the CONTACTS table
-	$stmt->close();  // Close the first statement
-	
-	// Insert into USERCONTACTS table linking the new contact with the user from MAINUSERS
-	$stmt = $conn->prepare("INSERT INTO USERCONTACTS (UserID, ContactID) VALUES (?, ?)");
-	if ($stmt === false) {
-		returnWithError("Failed to prepare INSERT statement for USERCONTACTS: " . $conn->error);
-		$conn->close();
-		exit();
-	}
-	$stmt->bind_param("ii", $userId, $contactID);
-	$stmt->execute();
-	
-	// eerrors
-	if ($stmt->error) {
-		returnWithError("Failed to execute INSERT statement for USERCONTACTS: " . $stmt->error);
-		$stmt->close();
-		$conn->close();
-		exit();
-	}
-	
-	// stops connections
-	$stmt->close();
-	$conn->close();
-	
-	// successful contact added
-	$response = array("message" => "Contact added successfully!");
-	sendResultInfoAsJson($response);
+function returnWithSuccess($message)
+{
+	$retValue = '{"message":"' . $message . '","error":""}';
+	sendResultInfoAsJson($retValue);
+}
 	
 ?>
