@@ -26,17 +26,18 @@ error_log("Decoded JSON: " . json_encode($inData));
 // Initialize variables
 $firstName = $inData["firstName"] ?? null;
 $lastName = $inData["lastName"] ?? null;
-$userId = $inData["userID"] ?? null;
-$newPhone = $inData["phone"] ?? null;
-$newEmail = $inData["email"] ?? null;
+$email = $inData["email"] ?? null;
+$userId = $inData["UserID"] ?? null;
 
-if (empty($firstName) || empty($lastName) || empty($userId) || empty($newPhone) || empty($newEmail)) {
+// Validate that required fields are present
+if (empty($firstName) || empty($lastName) || empty($email) || empty($userId)) {
     returnWithError("All fields are required");
     exit();
 }
 
-error_log("Extracted values: firstName=$firstName, lastName=$lastName, userID=$userId, newPhone=$newPhone, newEmail=$newEmail");
+error_log("Extracted values: firstName=$firstName, lastName=$lastName, email=$email, userID=$userId");
 
+// Connect to the database
 $conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
 if ($conn->connect_error) {
     error_log("Connection failed: " . $conn->connect_error);
@@ -44,8 +45,8 @@ if ($conn->connect_error) {
     exit();
 }
 
-
-$stmt = $conn->prepare("DELETE FROM Contacts WHERE (Phone = ?, Email = ? WHERE FirstName = ? AND LastName = ? AND UserID = ?)");
+// Prepare the DELETE statement
+$stmt = $conn->prepare("DELETE FROM Contacts WHERE FirstName = ? AND LastName = ? AND Email = ? AND UserID = ?");
 if ($stmt === false) {
     error_log("Failed to prepare DELETE statement: " . $conn->error);
     returnWithError("Failed to prepare DELETE statement");
@@ -53,7 +54,8 @@ if ($stmt === false) {
     exit();
 }
 
-$stmt->bind_param("ssssi", $newPhone, $newEmail, $firstName, $lastName, $userId);
+// Bind parameters and execute the statement
+$stmt->bind_param("sssi", $firstName, $lastName, $email, $userId);
 
 if ($stmt->execute()) {
     // Check if any rows were affected
