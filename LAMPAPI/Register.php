@@ -12,6 +12,11 @@
         exit();
     }
 
+    $login = $inData["login"];
+    $password = $inData["password"];
+    $firstName = $inData["firstName"];
+    $lastName = $inData["lastName"];
+
     // connect to database
     $conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331"); 	
     if( $conn->connect_error )
@@ -20,13 +25,24 @@
         exit();
     }
 
+    // check for repeated users 
+    $stmt = $conn->prepare("SELECT ID FROM Users WHERE Login=? LIMIT 1");
+    $stmt->bind_param("s", $login);
+    if ($stmt->execute() == FALSE) {
+        returnWithError("Failed to check for duplicate login.");
+        exit();
+    }
+
+    $result = $stmt->get_result();
+
+    if ( $result->num_rows != 0 ) 
+    {
+        returnWithError("Login already taken.");
+        exit();
+    }
+
     // insert user into Users
     $stmt = $conn->prepare("INSERT into Users (firstName, lastName, login, password) VALUES(?,?,?,?)");
-
-    $login = $inData["login"];
-    $password = $inData["password"];
-    $firstName = $inData["firstName"];
-    $lastName = $inData["lastName"];
 
     $stmt->bind_param("ssss", $firstName, $lastName, $login, $password);
 
