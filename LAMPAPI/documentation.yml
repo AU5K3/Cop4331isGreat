@@ -1,0 +1,229 @@
+swagger: "2.0"
+info:
+  description: "This is the API documentation for COP 4331 Group 25's Small Project."
+  version: "1.0.0"
+  title: "Galaxy Contact Manager"
+  contact:
+    email: "ag221273@ucf.edu"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "cop4331isgreat.xyz"
+basePath: "/LAMPAPI"
+schemes:
+- "http"
+paths:
+  /Login.php:
+    post:
+      tags:
+      - "Users"
+      summary: "Logs into Galaxy Contact Manager"
+      description: "Logs into Galaxy Contact Manager"
+      operationId: "Login"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "loginItem"
+        description: "Login"
+        schema:
+          $ref: "#/definitions/Login"
+      responses:
+        200:
+          description: OK
+        404:
+          description: URL Not Found
+        500:
+          description: Server Error
+  /Register.php:
+    post:
+      tags:
+      - "Users"
+      summary: "Registers a new user into Galaxy Contact Manager"
+      description: "Registers a new user into Galaxy Contact Manager"
+      operationId: "Register"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "registerItem"
+        description: "Register"
+        schema:
+          $ref: "#/definitions/Register"
+      responses:
+        200:
+          description: OK
+        404:
+          description: URL Not Found
+        500:
+          description: Server Error
+  /AddContact.php:
+    post:
+      tags:
+      - "Contacts"
+      summary: "Creates a new contact for user with given id"
+      description: "Creates a new contact for user with given id"
+      operationId: "AddContact"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "Contact"
+        description: "Contact"
+        schema:
+          $ref: "#/definitions/Contact"
+      responses:
+        200:
+          description: OK
+        404:
+          description: URL Not Found
+        500:
+          description: Server Error
+  /SearchContacts.php:
+    post:
+      tags:
+      - "Contacts"
+      summary: "Searches for a contact for user with given id"
+      description: "Searches for a contact for user with given id"
+      operationId: "SearchContact"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "searchItem"
+        description: "searchItem"
+        schema:
+          $ref: "#/definitions/Search"
+      responses:
+        200:
+          description: OK
+        404:
+          description: URL Not Found
+        500:
+          description: Server Error
+  /UpdateContact.php:
+    post:
+      tags:
+      - "Contacts"
+      summary: "Updates a contact with new information for user with given id"
+      description: "Updates a contact with new information for user with given id"
+      operationId: "UpdateContact"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "Contact"
+        description: "Contact"
+        schema:
+          $ref: "#/definitions/Contact"
+      responses:
+        200:
+          description: OK
+        404:
+          description: URL Not Found
+        500:
+          description: Server Error
+  /DeleteContact.php:
+    post:
+      tags:
+      - "Contacts"
+      summary: "Deletes a contact for user with given id"
+      description: "Deletes a contact for user with given id"
+      operationId: "DeleteContact"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "Contact"
+        description: "Contact"
+        schema:
+          $ref: "#/definitions/Contact"
+      responses:
+        200:
+          description: OK
+        404:
+          description: URL Not Found
+        500:
+          description: Server Error
+definitions:
+  Login:
+    type: object
+    required:
+      - login
+      - password
+    properties:
+      login:
+        type: string
+        example: "RickL"
+      password:
+        type: string
+        example: "COP4331"
+  Register:
+    type: object
+    required:
+      - login
+      - password
+      - firstName
+      - lastName
+    properties:
+      login:
+        type: string
+        example: "RickL"
+      password:
+        type: string
+        example: "COP4331"
+      firstName:
+        type: string
+        example: "Rick"
+      lastName:
+        type: string
+        example: "Leinecker"
+  Contact:
+    type: object
+    required:
+      - firstName
+      - lastName
+      - phone
+      - email
+      - UserID
+    properties:
+      firstName:
+        type: string
+        example: "John"
+      lastName:
+        type: string
+        example: "Doe"
+      phone:
+        type: string
+        example: "123-456-7890"
+      email:
+        type: string
+        example: "john.doe@example.com"
+      UserID:
+        type: string
+        example: "1"
+  Search:
+    type: object
+    required:
+      - userId
+      - search
+    properties:
+      userId:
+        type: string
+        example: "1"
+      search:
+        type: string
+        example: "v"
+
