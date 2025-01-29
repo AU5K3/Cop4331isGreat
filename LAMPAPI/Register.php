@@ -40,13 +40,27 @@
 		exit();
 	}
 
+    // user was succesfully registered!
+    // need to get user id 
+
+    $stmt = $conn->prepare("SELECT ID FROM Users WHERE Login=? AND Password =?");
+    $stmt->bind_param("ss", $login, $password);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if( $row = $result->fetch_assoc()  )
+    {
+        $retValue = array("id" => $row['ID'], "firstName" => $firstName, "lastName" => $lastName, "error" => "");
+        sendResultInfoAsJson($retValue);    
+    }
+    else
+    {
+        returnWithError("Failed to get user id: " . $stmt->error);
+    }
+
     // stops connections
     $stmt->close();
     $conn->close();
-
-    // user was succesfully registered!
-    $response = array("message" => "User registered successfully!");
-    sendResultInfoAsJson($response);
 
     // function to get input data from request body
     function getRequestInfo()
@@ -72,7 +86,7 @@
     // function to return error message as JSON
     function returnWithError( $err )
     {
-        $retValue = array("error" => $err);
+        $retValue = array("id" => 0, "firstName" => "", "lastName" => "", "error" => $err);
         sendResultInfoAsJson( $retValue );
     }
 
