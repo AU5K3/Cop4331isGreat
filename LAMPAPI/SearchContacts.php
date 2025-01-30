@@ -30,7 +30,7 @@
 			}
 			$searchCount++;
 			//$searchResults .= '"' . $row["FirstName"] . '"';
-			$searchResults .= '{"FirstName" : "'.$row["FirstName"].'" , "LastName" : "'.$row["LastName"].'" , "Phone" : "'.$row["{Phone}"].'" , "Email" : "'.$row["Email"].'"}';
+			$searchResults .= '{"firstName" : "'.$row["FirstName"].'" , "lastName" : "'.$row["LastName"].'" , "phone" : "'.$row["{Phone}"].'" , "email" : "'.$row["Email"].'"}';
 			//$searchResults .= '{"FirstName":"'.$row["FirstName"].'"}';
 		}
 		
@@ -60,7 +60,7 @@
 	
 	function returnWithError( $err )
 	{
-		$retValue = '{"id":0,"firstName":"","lastName":"","error":"' . $err . '"}';
+		$retValue = '{"UserID":0,"firstName":"","lastName":"","error":"' . $err . '"}';
 		sendResultInfoAsJson( $retValue );
 	}
 	
