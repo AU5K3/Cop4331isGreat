@@ -1,29 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="login.css">
-    </head>
-    <body>
-        <div class="container">
-            <form action="Register.php" method="POST">
-                <label for="firstName">First Name: </label>
-                <input type="text" placeholder="First Name" name="firstName" required>
-                <br>
-                <label for="lastName">Last Name: </label>
-                <input type="text" placeholder="Last Name" name="lastName" required>
-                <br>
-                <label for="userName">Username: </label>
-                <input type="text" placeholder="Username" name="userName" required>
-                <br>
-                <label for="password">Password: </label>
-                <input type="text" placeholder="Password" name="password" required>
-                <br>
-                <button type="submit">Register</button>
-                <br>
-                <a href="index.html">Back to Login</a>
-            </form>
-        </div>
-    </body>
+	<title>Register</title>	
+	<script type="text/javascript" src="js/md5.js"></script>
+	<script type="text/javascript" src="js/code.js"></script>
+        <link rel="stylesheet" href="css/register.css">
+</head>
+<body>
+
+<div id="registerDiv">
+	<h2><span id="inner-title">Register Here</span></h2>
+	<input type="text" placeholder="First Name" id="firstName" required>
+	<input type="text" placeholder="Last Name" id="lastName" required>
+	<input type="text" placeholder="Username" id="registerName" required>
+	<input type="text" placeholder="Password" id="registerPassword" required>
+	<button type="button" id="registerButton" class="buttons" onclick="doRegister();"> Enter </button>
+	<span id="registerResult"></span>
+	<div> <a href="index.html">Back to Login</a> </div>
+</div>
+
+</body>
 </html>
