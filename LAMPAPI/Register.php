@@ -63,7 +63,7 @@
     $result = $stmt->get_result();
 
     if($row = $result->fetch_assoc()) {
-        $retValue = array("id" => $row['ID'], "firstName" => $firstName, "lastName" => $lastName, "error" => "");
+        $retValue = array("UserID" => $row['ID'], "firstName" => $firstName, "lastName" => $lastName, "error" => "");
         sendResultInfoAsJson($retValue);    
     } else {
         returnWithError("Failed to get user id: " . $stmt->error);
@@ -94,7 +94,7 @@
  
     // function to return error message as JSON
     function returnWithError($err) {
-        $retValue = array("id" => 0, "firstName" => "", "lastName" => "", "error" => $err);
+        $retValue = array("UserID" => 0, "firstName" => "", "lastName" => "", "error" => $err);
         sendResultInfoAsJson( $retValue );
     }
 
