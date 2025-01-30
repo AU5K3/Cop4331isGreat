@@ -17,7 +17,7 @@
 		$stmt = $conn->prepare("select FirstName, LastName, Phone, Email, ID from Contacts where (FirstName like ? OR LastName like ? OR Phone like ? OR Email like ?)  AND UserID=?");
 		$colorName = "%" . $inData["search"] . "%";
 		//$colorName, $colorName,
-		$stmt->bind_param("ssssi", $colorName, $colorName, $colorName, $colorName, $inData["userId"]);
+		$stmt->bind_param("ssssi", $colorName, $colorName, $colorName, $colorName, $inData["userID"]);
 		$stmt->execute();
 		
 		$result = $stmt->get_result();
