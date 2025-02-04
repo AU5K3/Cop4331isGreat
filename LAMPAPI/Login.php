@@ -45,13 +45,13 @@
 	
 	function returnWithError( $err )
 	{
-		$retValue = '{"UserID":0,"firstName":"","lastName":"","error":"' . $err . '"}';
+		$retValue = '{"id":0,"firstName":"","lastName":"","error":"' . $err . '"}';
 		sendResultInfoAsJson( $retValue );
 	}
 	
 	function returnWithInfo( $firstName, $lastName, $id )
 	{
-		$retValue = '{"UserID":' . $id . ',"firstName":"' . $firstName . '","lastName":"' . $lastName . '","error":""}';
+		$retValue = '{"id":' . $id . ',"firstName":"' . $firstName . '","lastName":"' . $lastName . '","error":""}';
 		sendResultInfoAsJson( $retValue );
 	}
 	

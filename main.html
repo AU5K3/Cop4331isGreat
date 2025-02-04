@@ -2,25 +2,53 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <a href="index.html">Log Out</a>
+        <script type="text/javascript" src="js/code.js"></script>
+        <script type="text/javascript">
+            document.addEventListener('DOMContentLoaded', function() 
+            {
+                readCookie();
+            }, false);
+        </script>
     </head>
     <body>
-        <button id="addContact">Add Contact</button>
-        <div id="formSpace" style="margin-top: 20px;"></div>
-        <table id="mainTable">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Phone Number</th>
-                    <th>Address</th>
-                    <th>Email Address</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- data to be implemented -->
-            </tbody>
-        </table>
+        <div id="loggedInDiv">
+            <span id="userName"></span><br />
+            <button type="button" id="logoutButton" class="buttons" onclick="doLogout();">Log Out</button>
+        </div>
+        <div id="accessUIDiv">
+            <br />
+        
+            <input type="text" id="searchText" placeholder="Search for a contact"/>
+            <button type="button" id="searchColorButton" class="buttons" onclick="searchContacts();"> Search Contact </button><br />
+            <div id="searchResult"></div>
+            
+            <br /><br />
+            <table id="contactTable">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last name</th>
+                        <th>Phone Number</th>
+                        <th>Email Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--data to be loaded-->
+                </tbody>
+            </table>
+            <br />
+            <button type="button" id="addContactButton" class="buttons" onclick="addContactDropdown();"> Add Contact </button><br />
+            <div id="newContactContainer"></div>
+            
+            <span id="addResult"></span>
+        </div>
         <script>
+            addEventListener("DOMContentLoaded", (event) => {
+                console.log("loading current contacts");
+                // need to load current contacts 
+                loadContacts();
+            })
+            /*
             document.getElementById('addContact').addEventListener('click', () => {
                 const formContainer = document.getElementById('formSpace');
                 formSpace.innerHTML = `
@@ -48,14 +76,9 @@
                     .then(response => response.json())
                     .then(data => {
                         const newRow = document.createElement('tr');
-                        /*
-                        newItems.innerHTML = `
-                            <td>${data.contact.name}</td>
-                            <td>${data.contact.phone}</td>
-                            <td>${data.contact.address}</td>
-                            <td>${data.contact.email}</td>
-                        `;
-                        */
+                        
+                        
+                        
                         Object.values(data).forEach(cell => {
                             const td = document.createElement('td');
                             td.textContent = cell;
@@ -116,7 +139,7 @@
             document.addEventListener('DOMContentLoaded', () => {
               makeTable();
             })
-
+            */
         </script>
     </body>
 </html>
