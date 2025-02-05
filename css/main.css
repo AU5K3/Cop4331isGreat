@@ -1,0 +1,226 @@
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Geist', sans-serif;
+    background-image: url('https://images.unsplash.com/photo-1531959870249-9f9b729efcf4?q=80&w=2042&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); /* Coral reef background */
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* User Info and Logout */
+#loggedInDiv {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(42, 157, 143, 0.8); /* Matching teal */
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.user-name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.buttons {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    background-color: #6A230F; /* Darker coral color */
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'Geist', sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.buttons:hover {
+    background-color: #4f1a0d; /* Darker coral on hover */
+}
+
+/* Main Content Area */
+.main-container {
+    background: rgba(42, 157, 143, 0.8); /* Semi-transparent teal background */
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    width: 1000px;
+    /*max-width: 600px;*/
+}
+
+/* Search Container */
+.search-container {
+    margin-bottom: 20px;
+    display: flex;
+    height: 58px;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-field {
+    padding: 10px 16px;
+    font-size: 16px;
+    border-radius: 8px;
+    width: 70%;
+    border: none;
+    margin-right: 10px;
+}
+
+.search-result {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #6A230F;
+    max-height: 200px;  /* To limit the height of the table container */
+    overflow-y: auto;
+}
+
+/* Contact Table Styles */
+.contact-table-container {
+    margin-top: 30px;
+    max-height: 400px;  /* To limit the height of the table container */
+    overflow-y: auto;  /* Allow vertical scrolling */
+}
+
+.contact-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.search-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.search-table th,
+.search-table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.search-table th {
+    background-color: #2a9d8f; /* Teal header */
+    color: white; /* White text in header */
+}
+
+.search-table td {
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #333; /* Dark text for readability */
+}
+
+.contact-table th,
+.contact-table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.contact-table th {
+    background-color: #2a9d8f; /* Teal header */
+    color: white; /* White text in header */
+}
+
+.contact-table td {
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #333; /* Dark text for readability */
+}
+
+.contact-table td.error {
+    background-color: #ff9c9c;
+    border-color: #6A230F;
+    
+}
+
+/* Add Contact Button and New Contact Form */
+.new-contact-container {
+    margin-top: 30px;
+}
+
+.add-result {
+    font-size: 16px;
+    color: #6A230F; /* Coral color for result */
+}
+
+/* Add Contact Button Styling */
+#addContactButton {
+    background-color: #6A230F;
+    border-radius: 8px;
+    padding: 12px 30px;
+    color: white;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+}
+
+#addContactButton:hover {
+    background-color: #4f1a0d; /* Darker coral on hover */
+}
+
+.table-buttons {
+    width: 50px;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    /*margin: 10px 0;*/
+    background-color: #6A230F; /* Darker coral color */
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'Geist', sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+#searchColorButton {
+    width: 100px;
+    padding: 10px 16px;
+    background-color: #6A230F; /* Darker coral color */
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'Geist', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+#searchText {
+    padding: 5px 16px;
+    font-size: 16px;
+    border-radius: 8px;
+    width: 70%;
+    border: none;
+    margin-right: 10px;
+    height: 48px;
+}
+
+.error {
+    border: 2px solid red;
+    background-color: #ffe5e5;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    display: none;
+}
+
