@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Login</title>
+    <meta name="description" content="Under The Sea Contact Manager" />
     <script type="text/javascript" src="js/md5.js"></script>
     <script type="text/javascript" src="js/code.js"></script>
-    <link href="css/register.css" rel="stylesheet">
+    <link href="css/login.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Geist" rel="stylesheet">
     <!-- Add FontAwesome for the eye icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -15,26 +16,23 @@
     <!-- Back to Homepage Button -->
     <button onclick="location.href = 'index.html';" class="back-btn">Back to Homepage</button>
 
-    <!-- Register Container -->
-    <div id="registerDiv">
-        <h2><span id="inner-title">Register Here</span></h2>
-        <input type="text" placeholder="First Name" id="firstName" required><br />
-        <input type="text" placeholder="Last Name" id="lastName" required><br />
-        <input type="text" placeholder="Username" id="registerName" required><br />
+    <!-- Login Container -->
+    <div id="loginDiv">
+        <h2><span id="inner-title">Log In</span></h2>
+        <input type="text" id="loginName" placeholder="Username" /><br />
         <div class="password-container">
-            <input type="password" placeholder="Password" id="registerPassword" required>
+            <input type="password" id="loginPassword" placeholder="Password" />
             <i class="fas fa-eye" id="togglePassword"></i>
         </div>
-        <button type="button" id="registerButton" class="buttons" onclick="checkRegister();"> Enter </button>
-        <div class="error-message" id="registerEmpty">Please Enter All Fields!</div>
-        <span id="registerResult"></span>
-        <div class="login-link">Already have an account? <a href="login.html">Login Here!</a></div>
+        <button type="button" id="loginButton" class="buttons" onclick="doLogin();"> Enter </button>
+        <span id="loginResult"></span>
+        <div class="register-link">Don't have an account? <a href="register.html">Register Here!</a></div>
     </div>
 
     <!-- JavaScript for Password Toggle -->
     <script>
         const togglePassword = document.querySelector('#togglePassword');
-        const password = document.querySelector('#registerPassword');
+        const password = document.querySelector('#loginPassword');
 
         togglePassword.addEventListener('click', function () {
             // Toggle the type attribute

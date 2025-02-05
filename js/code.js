@@ -65,11 +65,14 @@ function doRegister()
 	let firstName = document.getElementById("firstName").value;
 	let lastName = document.getElementById("lastName").value;
 //	var hash = md5( password );
+	console.log("registering");
+
 	
 	document.getElementById("registerResult").innerHTML = "";
 
 	let tmp = {login:login,password:password,firstName:firstName,lastName:lastName};
 //	var tmp = {login:login,password:hash};
+	console.log(tmp);
 	let jsonPayload = JSON.stringify( tmp );
 	
 	let url = urlBase + '/Register.' + extension;
@@ -156,19 +159,52 @@ function doLogout()
 	firstName = "";
 	lastName = "";
 	document.cookie = "firstName= ; expires = Thu, 01 Jan 1970 00:00:00 GMT";
-	window.location.href = "index.html";
+	window.location.href = "login.html";
 }
 
 function addContact()
 {
 	let firstName = document.getElementById("firstName").value;
 	let lastName = document.getElementById("lastName").value;
-	let phone = document.getElementById("phoneNum").value;
-	let email = document.getElementById("email").value;
-	console.log(phone);
+	let phone = document.getElementById("phoneNum");
+	let email = document.getElementById("email");
+	
+	let emailError = document.getElementById("emailError");
+    let phoneError = document.getElementById("phoneError");
+	//console.log(phone);
 
+	emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email.value);
+	phoneRegex = /^\d{3}[-\/ ]?\d{3}[-\/ ]?\d{4}$/.test(phone.value);
+
+	let isValid = true;
+
+	if (!emailRegex) {
+		email.classList.add("error");
+		emailError.style.display = "block";
+		isValid = false;
+	} else {
+		email.classList.remove("error");
+        emailError.style.display = "none";
+	}
+
+	if (!phoneRegex) {
+		phone.classList.add("error");
+		phoneError.style.display = "block";
+		isValid = false;
+	} else {
+		phone.classList.remove("error");
+		phoneError.style.display = "none";
+	}
+
+	if (!isValid) {
+		return;
+	}
+
+	phone = phone.value.replace(/\D/g, '');
+	email = email.value;
+	
 	document.getElementById("addResult").innerHTML = "";
-	console.log(userId);
+	//console.log(userId);
 	let tmp = {firstName:firstName,lastName:lastName,phone:phone,email:email,UserID:userId};
 	let jsonPayload = JSON.stringify( tmp );
 
@@ -202,7 +238,7 @@ function searchContacts()
 	document.getElementById("searchResult").innerHTML = "";
 	
 	let contactList = "";
-
+	//console.log(srch);
 	let tmp = {search:srch,userId:userId};
 	let jsonPayload = JSON.stringify( tmp );
 
@@ -219,8 +255,9 @@ function searchContacts()
 			{
 				//document.getElementById("searchResult").innerHTML = "Color(s) has been retrieved";
 				let jsonObject = JSON.parse( xhr.responseText );
-				console.log(JSON.stringify(jsonObject));
+				//console.log(JSON.stringify(jsonObject));
 				let searchTable = document.createElement('table');
+				searchTable.classList.add("search-table");
 				searchTable.innerHTML = `
 					<table id="searchTable">
 						<thead>
@@ -246,6 +283,13 @@ function searchContacts()
 					}
 				}
 				document.getElementById('searchResult').appendChild(searchTable);
+				toggleSearchButton = document.createElement("button");
+				toggleSearchButton.classList.add("buttons");
+				toggleSearchButton.innerHTML = `Hide/Show Search Results`;
+				toggleSearchButton.addEventListener("click", function() {
+					searchTable.style.display = (searchTable.style.display === "none" || searchTable.style.display === "") ? "table" : "none";
+				});
+				document.getElementById('searchResult').appendChild(toggleSearchButton);
 				//document.getElementsByTagName("p")[0].innerHTML = contactList;
 			}
 		};
@@ -261,7 +305,31 @@ function searchContacts()
 function addContactDropdown() {
 	const newContainer = document.getElementById("newContactContainer");
 	newContainer.innerHTML = `
-		<div id="newContact>
+		<form id="newContact">
+			<table class="contact-table">
+				<thead>
+					<tr>
+						<th>First Name</th>
+						<th>Last Name</th>
+						<th>Phone Number</th>
+						<th>Email Address</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><input type="text" class="input-field" id="firstName" name="firstName" required></td>
+						<td><input type="text" class="input-field" id="lastName" name="lastName" required></td>
+						<td><input type="text" class="input-field" id="phoneNum" name="phoneNum" required>
+						<div class="error-message" id="phoneError">Invalid phone format!</div></td>
+						<td><input type="email" class="input-field" id="email" name="email" required>
+						<div class="error-message" id="emailError">Invalid email format!</div></td>
+					</tr>
+				</tbody>
+			</table>
+			<button type="button" class="buttons" onclick="addContact();">Create Contact</button>
+		</form>`;
+	/*newContainer.innerHTML = `
+		<form id="newContact">
 			<label for="firstName">First Name: </label><br>
 			<input type="text" id="firstName" name="firstName" required><br><br>
 			<label for="lastName">Last Name: </label><br>
@@ -270,8 +338,9 @@ function addContactDropdown() {
 			<input type="text" id="phoneNum" name="phoneNum" required><br><br>
 			<label for="email">Email Address: </label><br>
 			<input type="text" id="email" name="email" required><br><br>
-			<button type="button" id= class="buttons" onclick="addContact();">Create Contact</button>
-		</div>`;
+			<button type="button" class="buttons" onclick="addContact();">Create Contact</button>
+		</form>`;
+		*/
 }
 
 function loadContacts()
@@ -296,8 +365,9 @@ function loadContacts()
 			if (this.readyState == 4 && this.status == 200) 
 			{
 				//document.getElementById("searchResult").innerHTML = "Color(s) has been retrieved";
+				//console.log("loading contacts");
 				let jsonObject = JSON.parse( xhr.responseText );
-				console.log(JSON.stringify(jsonObject));
+				//console.log(JSON.stringify(jsonObject));
 				
 				
 				for( let i=0; i<jsonObject.results.length; i++ )
@@ -339,10 +409,11 @@ function formatData(currContact) {
 	const buttonBox = document.createElement("td");
 	const deleteButton = document.createElement("button");
 	deleteButton.innerHTML = '&#10006;';
-	deleteButton.classList.add("buttons");
+	deleteButton.classList.add("table-buttons");
+	//deleteButton.classList.add("buttons");
 
 	deleteButton.addEventListener("click", function() {
-		console.log(currContact);
+		//console.log(currContact);
 		deleteContact(currContact)
 		row.remove();
 	});
@@ -350,10 +421,18 @@ function formatData(currContact) {
 
 	//deleteBox.innerHTML = `<button type="button" class="buttons" onclick="deleteContact();">'&#10006;'</button>`;
 
+	// makes update button
+	const updateBox = document.createElement("td");
 	const updateButton = document.createElement("button");
 	updateButton.innerHTML = '&#128393;';
-	updateButton.classList.add("buttons");
+	updateButton.classList.add("table-buttons");
+	updateButton.addEventListener("click", function() {
+		updateRow(row, currContact, updateButton);
+	})
+	
 
+	/*
+	// new row to update contact
 	const updateRow = document.createElement("tr");
 	updateRow.style.display = "none";
 	const updateCell = document.createElement("td");
@@ -362,13 +441,13 @@ function formatData(currContact) {
 	updateRow.appendChild(updateCell);
 	updateCell.innerHTML = `
 		<div id="updateContact">
-			<label for="phoneNum">New Phone Number: </label><br>
-			<input type="text" id="newPhoneNum" name="phoneNum" value="${currContact.Phone}" required><br><br>
+			<label for="phoneNum">New Phone Number: </label>
 			<label for="email">New Email Address: </label><br>
+			<input type="text" id="newPhoneNum" name="phoneNum" value="${currContact.Phone}" required>
 			<input type="text" id="newEmail" name="email" value="${currContact.Email}" required><br><br>
 			<button type="button" class="buttons save-update-btn">Save Contact</button>
 		</div>`;
-
+	
 	updateButton.addEventListener("click", function() {
 		updateRow.style.display = updateRow.style.display === "none" ? "table-row" : "none";
 	});
@@ -376,10 +455,12 @@ function formatData(currContact) {
 	updateRow.querySelector(".save-update-btn").addEventListener("click", function() {
 		updateContact(currContact, updateRow)
 	});
+	*/
 
 	buttonBox.appendChild(deleteButton);
-	buttonBox.appendChild(updateButton);
+	updateBox.appendChild(updateButton);
 	row.appendChild(buttonBox);
+	row.appendChild(updateBox);
 
 	//const updateBox = document.createElement("td");
 	//updateBox.innerHTML = `<button type="button" class="buttons" onclick="updateContact();">'U+270E'</button>`;
@@ -407,7 +488,7 @@ function formatData(currContact) {
 	});
 	*/
 	tableBody.appendChild(row);
-	tableBody.appendChild(updateRow);
+	//tableBody.appendChild(updateRow);
 }
 
 function deleteContact(currContact, row) {
@@ -416,7 +497,7 @@ function deleteContact(currContact, row) {
 	const Phone = currContact.Phone;
 	const Email = currContact.Email;
 
-	console.log(userId);
+	//console.log(userId);
 	let tmp = {firstName:FirstName,lastName:LastName,phone:Phone,email:Email,userID:userId};
 	let jsonPayload = JSON.stringify( tmp );
 
@@ -442,16 +523,18 @@ function deleteContact(currContact, row) {
 	}
 }
 
-function updateContact(contact, updateRow) {
+function updateContact(contact, newPhone, newEmail) {
 	let firstName = contact.FirstName;
 	let lastName = contact.LastName;
-	let phone = updateRow.querySelector("input[name='phoneNum']").value;
-	let email = updateRow.querySelector("input[name='email']").value;
+	//console.log(newPhone);
+	//console.log(newEmail);
+	let phone = newPhone.replace(/\D/g, '');
+	let email = newEmail;
 	//console.log(phone);
 
 	document.getElementById("addResult").innerHTML = "";
-	console.log(userId);
 	let tmp = {firstName:firstName,lastName:lastName,phone:phone,email:email,userID:userId};
+	//console.log(tmp);
 	let jsonPayload = JSON.stringify( tmp );
 
 	let url = urlBase + '/UpdateContact.' + extension;
@@ -465,8 +548,8 @@ function updateContact(contact, updateRow) {
 		{
 			if (this.readyState == 4 && this.status == 200) 
 			{
-				console.log("contact updated");
-				location.reload();
+				//console.log("contact updated");
+				//location.reload();
 			}
 		};
 		xhr.send(jsonPayload);
@@ -475,4 +558,166 @@ function updateContact(contact, updateRow) {
 	{
 		console.log(err.message);
 	}
+}
+
+function updateRow(row, currContact, updateButton) {
+	let phoneCell = row.cells[2];
+	let emailCell = row.cells[3];
+	//let phone = phoneCell.textContent;
+	//let email = emailCell.textContent;
+	if (updateButton.innerHTML === "&#128393;" || updateButton.textContent.trim() === "🖉") {
+		//console.log("start updates");
+		[phoneCell, emailCell].forEach(cell => {
+			let newInput = document.createElement("input");
+			newInput.type = "text";
+			newInput.classList.add("update-inputs");
+			newInput.classList.add("input-field");
+			newInput.value = cell.textContent;
+			cell.textContent = "";
+			cell.appendChild(newInput);
+		}); 
+		updateButton.innerHTML = "&#128190;";
+	} else {
+		let isValid = true;
+		[phoneCell, emailCell].forEach(cell => {
+			let input = cell.querySelector(".update-inputs");
+			if (input && input.value.trim() === "") {
+				input.classList.add("error");
+				isValid = false;
+			}
+		});
+
+		//let emailError = document.getElementById("emailError");
+		//let phoneError = document.getElementById("phoneError");
+		//console.log(phone);
+		//console.log(emailCell.querySelector(".update-inputs").value.trim());
+		//console.log(phoneCell.querySelector(".update-inputs").value.trim());
+		emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(emailCell.querySelector(".update-inputs").value.trim());
+		phoneRegex = /^\d{3}[-\/ ]?\d{3}[-\/ ]?\d{4}$/.test(phoneCell.querySelector(".update-inputs").value.trim());
+
+		//let isValid = true;
+
+		if (!emailRegex) {
+			emailCell.classList.add("error");
+			//emailError.style.display = "block";
+			isValid = false;
+			//console.log("invalid email");
+		} else {
+			emailCell.classList.remove("error");
+			//emailError.style.display = "none";
+		}
+
+		if (!phoneRegex) {
+			phoneCell.classList.add("error");
+			//phoneError.style.display = "block";
+			isValid = false;
+			//console.log("invalid phone number");
+		} else {
+			phoneCell.classList.remove("error");
+			//phoneError.style.display = "none";
+		}
+
+		if (!isValid) {
+			return;
+		}
+
+		//phone = phone.value.replace(/\D/g, '');
+		/*
+		if (!isValid) {
+			alert("Fields cannot be empty!");
+			// ***come back to this***
+			return;
+		}
+		*/
+		[phoneCell, emailCell].forEach(cell => {
+			let input = cell.querySelector(".update-inputs");
+			if (input) {
+				cell.textContent = input.value;
+			}
+		});
+		//console.log(phoneCell.textContent);
+		//console.log(emailCell.textContent);
+		updateContact(currContact, phoneCell.textContent, emailCell.textContent);
+
+		updateButton.innerHTML = '&#128393;';
+	}
+}
+
+/*function validateNewContact() {
+	let phone = document.getElementById("phoneNum").value;
+	let email = document.getElementById("email").value;
+	let emailError = document.getElementById("emailError");
+    let phoneError = document.getElementById("phoneError");
+	//console.log(phone);
+
+	emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email.value);
+	phoneRegex = /^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g.test(phone.value);
+
+	let isValid = true;
+
+	if (!emailRegex) {
+		email.classList.add("error");
+		emailError.style.display = "block";
+		isValid = false;
+	} else {
+		email.classList.remove("error");
+        emailError.style.display = "none";
+	}
+
+	if (!phoneRegex) {
+		phone.classList.add("error");
+		phoneError.style.display = "block";
+		isValid = false;
+	} else {
+		phone.classList.remove("error");
+		phoneError.style.display = "none";
+	}
+
+	if (isValid) {
+		addContact();
+	}
+}*/
+
+function checkRegister() {
+	let password = document.getElementById("registerPassword");
+	let userName = document.getElementById("registerName");
+	let firstName = document.getElementById("firstName");
+	let lastName = document.getElementById("lastName");
+	let result = document.getElementById("registerEmpty");
+	if (isEmpty(password.value)) {
+		result.style.display = "block";
+		password.classList.add("error");
+	} else {
+		password.classList.remove("error");
+	}
+
+	if (isEmpty(userName.value)) {
+		result.style.display = "block";
+		userName.classList.add("error");
+	} else {
+		userName.classList.remove("error");
+	}
+
+	if (isEmpty(firstName.value)) {
+		result.style.display = "block";
+		firstName.classList.add("error");
+	} else {
+		firstName.classList.remove("error");
+	}
+
+	if (isEmpty(lastName.value)) {
+		result.style.display = "block";
+		lastName.classList.add("error");
+	} else {
+		lastName.classList.remove("error");
+	}
+
+	if (!isEmpty(password.value) && !isEmpty(userName.value) && !isEmpty(firstName.value) && !isEmpty(lastName.value)) {
+		result.style.display = "none";
+		doRegister();
+	} 
+}
+
+function isEmpty(string) {
+	return string == "" || string == null;
 }

@@ -1,98 +1,179 @@
-/* General Reset */
-* {
+/* General Styles */
+body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-/* Body Styling */
-body {
     font-family: 'Geist', sans-serif;
-    background-color: #f4f4f9;
+    background-image: url('https://images.unsplash.com/photo-1531959870249-9f9b729efcf4?q=80&w=2042&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); /* Coral reef background */
+    background-size: cover;
+    background-position: center;
+    color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    color: #333;
 }
 
-/* Registration Container Styling */
+/* Back to Homepage Button */
+.back-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    background-color: #6A230F; /* brown color */
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    font-family: 'Geist', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.back-btn:hover {
+    background-color: #531d0d; /* Darker brown on hover */
+}
+
+/* Register Container */
 #registerDiv {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: rgba(42, 157, 143, 0.8); /* Semi-transparent teal background */
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    text-align: center;
     width: 100%;
     max-width: 400px;
-    text-align: center;
 }
 
+/* Inner Title */
 #inner-title {
-    font-size: 1.8rem;
-    color: #333;
-    margin-bottom: 1.5rem;
+    font-size: 32px;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
     display: block;
 }
 
-/* Input Field Styling */
+/* Input Fields */
 input[type="text"], input[type="password"] {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1rem;
-    outline: none;
-    transition: border-color 0.3s ease;
+    width: 90%; /* Match the width of other inputs */
+    padding: 15px;
+    margin: 15px 0;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    font-family: 'Geist', sans-serif;
+    font-size: 18px;
+    color: #333;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-input[type="text"]:focus, input[type="password"]:focus {
-    border-color: #4a90e2;
+input[type="text"]::placeholder, input[type="password"]::placeholder {
+    color: #666;
 }
 
-/* Button Styling */
+/* Buttons */
 .buttons {
     width: 100%;
-    padding: 12px;
-    background-color: #4a90e2;
-    color: white;
+    padding: 15px;
+    margin: 20px 0;
+    background-color: #6A230F; /* Replaced with new color */
     border: none;
-    border-radius: 5px;
-    font-size: 1rem;
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'Geist', sans-serif;
+    font-size: 20px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .buttons:hover {
-    background-color: #357abd;
+    background-color: #531d0d; /* Darker version of the new color */
 }
 
-/* Registration Result Styling */
-#registerResult {
-    color: #e74c3c;
-    font-size: 0.9rem;
-    margin-top: 10px;
-    display: block;
+/* Login Link */
+.login-link {
+    font-size: 18px; /* Larger font size */
+    color: #fff; /* White text for better contrast */
+    margin-top: 15px;
 }
 
-/* Link Styling */
-a {
-    color: #4a90e2;
+.login-link a {
+    color: #6A230F; /* Replaced with new color */
     text-decoration: none;
+    font-weight: bold;
     transition: color 0.3s ease;
 }
 
-a:hover {
-    color: #357abd;
+.login-link a:hover {
+    color: #531d0d; /* Darker version of the new color */
+    text-decoration: underline;
 }
 
-/* Responsive Design */
-@media (max-width: 480px) {
-    #registerDiv {
-        padding: 1.5rem;
-    }
+/* Register Result Message */
+#registerResult {
+    display: block;
+    margin-top: 15px;
+    font-size: 16px;
+    color: #6A230F; /* Replaced with new color */
+}
 
-    #inner-title {
-        font-size: 1.5rem;
-    }
+/* Password Container */
+.password-container {
+    width: 100%; /* Full width of the container */
+    margin: 0; /* Match the margin of other inputs */
+    position: relative;
+}
+
+/* Password Input */
+#registerPassword {
+    width: 90%; /* Match the width of other inputs */
+    padding: 15px;
+    margin: 15px 0;
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    font-family: 'Geist', sans-serif;
+    font-size: 18px;
+    color: #333;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+#registerPassword.error {
+    border: 2px solid red;
+    background-color: #ffe5e5;
+}
+
+/* Eye Icon */
+#togglePassword {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #666;
+    font-size: 18px;
+}
+
+#togglePassword:hover {
+    color: #333;
+}
+
+.text.error {
+    border: 2px solid red;
+    background-color: #ffe5e5;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    display: none;
+}
+
+input[type="text"].error,
+input[type="password"].error {
+    border: 2px solid red;
+    background-color: #ffe5e5;
 }
